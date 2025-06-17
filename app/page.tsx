@@ -1,83 +1,162 @@
-import Image from 'next/image';
+import { LightbulbIcon, Repeat2Icon, SparklesIcon, TargetIcon } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <main className="row-start-2 flex flex-col items-center gap-[32px] sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
+    <div className="relative isolate pt-14">
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+      >
+        <div
+          style={{
+            clipPath:
+              'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)',
+          }}
+          className="from-primary/10 to-primary/50 relative left-[calc(50%-11rem)] aspect-1155/678 w-144.5 -translate-x-1/2 rotate-30 bg-linear-to-tr opacity-30 sm:left-[calc(50%-30rem)] sm:w-288.75"
         />
-        <ol className="list-inside list-decimal text-center font-[family-name:var(--font-geist-mono)] text-sm/6 sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{' '}
-            <code className="rounded bg-black/[.05] px-1 py-0.5 font-[family-name:var(--font-geist-mono)] font-semibold dark:bg-white/[.06]">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <a
-            className="bg-foreground text-background flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent px-4 text-sm font-medium transition-colors hover:bg-[#383838] sm:h-12 sm:w-auto sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="flex h-10 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-4 text-sm font-medium transition-colors hover:border-transparent hover:bg-[#f2f2f2] sm:h-12 sm:w-auto sm:px-5 sm:text-base md:w-[158px] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      </div>
+      <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
+        {/* Announcements or Analytics placeholder */}
+        <div className="mx-8 text-center">
+          <h1 className="text-5xl font-bold tracking-tight text-balance sm:text-7xl">
+            Build Your{' '}
+            <span className="bg-gradient-to-b from-gray-800 to-gray-300 bg-clip-text text-transparent dark:from-gray-300 dark:to-gray-800">
+              Unstoppable{' '}
+            </span>
+            Momentum
+          </h1>
+          <p className="text-muted-foreground mx-auto mt-8 max-w-3xl text-lg font-medium text-pretty sm:text-xl/8">
+            Go beyond tracking. Momentum is your intelligent companion, providing subtle guidance
+            and personalized insights to fuel your personal growth journey.
+          </p>
+          <div className="mt-10 flex items-center justify-center gap-x-6">
+            <Button asChild className="font-semibold shadow-xs">
+              <Link href="#">Join Early Access</Link>
+            </Button>
+            <Button asChild variant="ghost">
+              <Link href="#">
+                Learn more <span aria-hidden="true">→</span>
+              </Link>
+            </Button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex flex-wrap items-center justify-center gap-[24px]">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/file.svg" alt="File icon" width={16} height={16} />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+      <section className="bg-card-foreground/5 dark:bg-card py-24 sm:py-32 lg:py-48">
+        <div className="mx-8">
+          <div className="mx-auto grid max-w-6xl place-items-center md:grid-cols-2 md:gap-24">
+            <div>
+              <h2 className="text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
+                Frustrated with{' '}
+                <span className="bg-gradient-to-b from-gray-800 to-gray-300 bg-clip-text text-transparent dark:from-gray-300 dark:to-gray-800">
+                  Stalled
+                </span>{' '}
+                Progress?
+              </h2>
+            </div>
+            <div>
+              <div className="mx-auto mt-12 flex max-w-3xl flex-row items-start lg:mt-0">
+                <h3 className="text-primary text-5xl font-extrabold">1</h3>
+                <h3 className="text-muted-foreground ml-4 text-lg font-medium text-pretty sm:text-xl/8">
+                  Setting ambitious goals is easy. Sticking to the habits that truly get you there?
+                  That&apos;s real challenge.
+                </h3>
+              </div>
+              <div className="mx-auto mt-8 flex max-w-3xl flex-row items-start">
+                <h3 className="text-primary text-5xl font-extrabold">2</h3>
+                <h3 className="text-muted-foreground ml-4 text-lg font-medium text-pretty sm:text-xl/8">
+                  Generic advice and basic trackers only tell you what you did, and not how to
+                  genuinely improve your patterns.
+                </h3>
+              </div>
+              <div className="mx-auto mt-8 flex max-w-3xl flex-row items-start">
+                <h3 className="text-primary text-5xl font-extrabold">3</h3>
+                <h3 className="text-muted-foreground ml-4 text-lg font-medium text-pretty sm:text-xl/8">
+                  You need insights tailored to <em>your</em> unique journey, not just raw data you
+                  have to interpret yourself.
+                </h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="py-24 sm:py-32 lg:py-48">
+        <div className="mx-8 text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-balance sm:text-6xl">
+            Introducing{' '}
+            <span className="bg-gradient-to-b from-gray-800 to-gray-300 bg-clip-text text-transparent dark:from-gray-300 dark:to-gray-800">
+              Momentum
+            </span>
+            {' - '}Intelligent Guidance for Lasting Change
+          </h1>
+          <p className="text-muted-foreground mx-auto mt-8 max-w-3xl text-lg font-medium text-pretty sm:text-xl/8">
+            Imagine a companion that learns your patterns, offers timely support, and helps you
+            transform intentions into reality - seamlessly and intelligently.
+          </p>
+        </div>
+        <div className="mt-15 flex justify-center">
+          <div className="mx-8 grid max-w-5xl grid-cols-1 gap-4 md:grid-cols-2">
+            <Card className="bg-background hover:bg-card-foreground/5 dark:hover:bg-card border-0 shadow-none">
+              <CardHeader className="flex flex-col items-center justify-center">
+                <div className="bg-primary/20 ring-primary/10 mb-4 rounded-full p-2 ring-8">
+                  <TargetIcon size="24" className="text-primary" />
+                </div>
+                <CardTitle className="mt-3.5 text-xl font-semibold text-pretty sm:text-2xl/8">
+                  Define Your Vision
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-muted-foreground text-center text-base">
+                Set clear, ambitious goals. Momentum helps break them into manageable, daily/timely
+                actions with smart suggestions.
+              </CardContent>
+            </Card>
+            <Card className="bg-background hover:bg-card-foreground/5 dark:hover:bg-card border-0 shadow-none">
+              <CardHeader className="flex flex-col items-center justify-center">
+                <div className="bg-primary/20 ring-primary/10 mb-4 rounded-full p-2 ring-8">
+                  <Repeat2Icon size="24" className="text-primary" />
+                </div>
+                <CardTitle className="mt-3.5 text-xl font-semibold text-pretty sm:text-2xl/8">
+                  Build Constant Habits
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-muted-foreground text-center text-base">
+                Effortlessly track your daily progress with a clean interface that keeps you
+                focused, not overwhelmed.
+              </CardContent>
+            </Card>
+            <Card className="bg-background hover:bg-card-foreground/5 dark:hover:bg-card border-0 shadow-none">
+              <CardHeader className="flex flex-col items-center justify-center">
+                <div className="bg-primary/20 ring-primary/10 mb-4 rounded-full p-2 ring-8">
+                  <LightbulbIcon size="24" className="text-primary" />
+                </div>
+                <CardTitle className="mt-3.5 text-xl font-semibold text-pretty sm:text-2xl/8">
+                  Gain Proactive Insights
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-muted-foreground text-center text-base">
+                Receive subtle nudges and insightful reflections tailored to your unique journey,
+                preventing plateaus.
+              </CardContent>
+            </Card>
+            <Card className="bg-background hover:bg-card-foreground/5 dark:hover:bg-card border-0 shadow-none">
+              <CardHeader className="flex flex-col items-center justify-center">
+                <div className="bg-primary/20 ring-primary/10 mb-4 rounded-full p-2 ring-8">
+                  <SparklesIcon size="24" className="text-primary" />
+                </div>
+                <CardTitle className="mt-3.5 text-xl font-semibold text-pretty sm:text-2xl/8">
+                  Reflect & Evolve
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-muted-foreground text-center text-base">
+                Understand your patterns and continuously refine your path with intelligent
+                summaries and growth prompts.
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

@@ -17,7 +17,7 @@ const problemsList: ProblemProps[] = [
   {
     id: 3,
     content:
-      'You need insights tailored to <em>your</em> unique journey, not just raw data you have to interpret yourself.',
+      'You need insights tailored to your unique journey, not just raw data you have to interpret yourself.',
   },
 ];
 

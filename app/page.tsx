@@ -1,3 +1,4 @@
+import { DifferentiatorSection } from '@/components/landing/differentiator-section';
 import { SolutionSection } from '@/components/landing/solution-section';
 import { ProblemSection } from '@/components/landing/problem-section';
 import { LandingBackground } from '@/components/landing/background';
@@ -10,6 +11,7 @@ export default function HomePage() {
       <HeroSection />
       <ProblemSection />
       <SolutionSection />
+      <DifferentiatorSection />
     </div>
   );
 }

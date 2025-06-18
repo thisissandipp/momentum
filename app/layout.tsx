@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { SiteHeader } from '@/components/site-header';
+import { SiteFooter } from '@/components/site-footer';
 import { Geist, Geist_Mono } from 'next/font/google';
 import type { Metadata } from 'next';
 import './globals.css';
@@ -35,6 +36,7 @@ export default function RootLayout({
         >
           <SiteHeader />
           <div className="bg-background relative">{children}</div>
+          <SiteFooter />
         </ThemeProvider>
       </body>
     </html>

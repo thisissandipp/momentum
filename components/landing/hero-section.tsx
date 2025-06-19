@@ -21,11 +21,6 @@ export const HeroSection = () => {
           <Button asChild className="font-semibold shadow-xs">
             <Link href="#">Join Early Access</Link>
           </Button>
-          <Button asChild variant="ghost">
-            <Link href="#">
-              Learn more <span aria-hidden="true">→</span>
-            </Link>
-          </Button>
         </div>
       </div>
     </section>

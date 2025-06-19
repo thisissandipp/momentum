@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 
 export const HeroSection = () => {
@@ -17,8 +18,14 @@ export const HeroSection = () => {
           Go beyond tracking. Momentum is your intelligent companion, providing subtle guidance and
           personalized insights to fuel your personal growth journey.
         </p>
-        <div className="mt-10 flex items-center justify-center gap-x-6">
-          <Button asChild className="font-semibold shadow-xs">
+        <div className="mt-10 flex flex-col items-center justify-center gap-x-6 md:flex-row">
+          <Input
+            className="w-80 focus-visible:ring-[none]"
+            type="email"
+            placeholder="Email address..."
+            required
+          />
+          <Button asChild className="mt-4 font-semibold shadow-xs md:mt-0">
             <Link href="#">Join Early Access</Link>
           </Button>
         </div>

@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export const SiteFooter = () => {
@@ -6,11 +7,17 @@ export const SiteFooter = () => {
       <div className="mx-auto max-w-6xl px-4">
         <p>&copy; {new Date().getFullYear()} Momentum. All rights reserved.</p>
         <div className="mt-4 space-x-6">
-          <Link href="#">Privacy Policy</Link>
-          <Link href="#">Terms of Service</Link>
-          <Link href="#" target="_blank" rel="noopener noreferrer">
-            Follow Our Journey
-          </Link>
+          <Button asChild variant="ghost">
+            <Link href="/privacy">Privacy Policy</Link>
+          </Button>
+          <Button asChild variant="ghost">
+            <Link href="/terms">Terms of Service</Link>
+          </Button>
+          <Button asChild variant="ghost">
+            <Link href="https://x.com/thisissandipp" target="_blank" rel="noopener noreferrer">
+              Follow Our Journey
+            </Link>
+          </Button>
         </div>
       </div>
     </footer>

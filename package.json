@@ -10,7 +10,11 @@
     "format": "prettier \"**/*.{ts,tsx}\" --write --log-level silent",
     "check": "bun run check:format && bun run lint",
     "check:format": "prettier \"**/*.{ts,tsx}\" --check",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "postbuild": "bun run db:migrate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

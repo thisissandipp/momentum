@@ -6,7 +6,7 @@ import { HeroSection } from '@/components/landing/hero-section';
 
 export default function HomePage() {
   return (
-    <div className="relative isolate pt-14">
+    <div className="relative isolate">
       <LandingBackground />
       <HeroSection />
       <ProblemSection />

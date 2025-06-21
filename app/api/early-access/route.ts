@@ -23,7 +23,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .where(eq(earlyAccess.email, parsed.data.email));
 
     if (existingUsers.length > 0) {
-      return NextResponse.json({ message: 'You are already signed in' }, { status: 409 });
+      return NextResponse.json({ message: 'You are already signed in' }, { status: 200 });
     }
 
     await db.insert(earlyAccess).values({ email: parsed.data.email } satisfies InsertEarlyAccess);

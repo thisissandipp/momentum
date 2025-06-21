@@ -9,7 +9,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 import Link from 'next/link';
+import axios from 'axios';
 
 const feedbackMoods = {
   excellent: 'excellent',
@@ -23,6 +25,34 @@ export const SiteHeader = () => {
   const [feedback, setFeedback] = useState<string>('');
 
   const [sendDisabled, setSendDisabled] = useState<boolean>(true);
+
+  const handleFeedback = async () => {
+    if (feedbackMood === null || feedback.length < 1) {
+      return;
+    }
+
+    try {
+      const response = await axios.post('/api/feedback', { moodRating: feedbackMood, feedback });
+      if (response.status !== 201) {
+        console.error(
+          'Failed to save your feedback',
+          response.data?.message || response.statusText,
+        );
+        toast('Failed to save your feedback', {
+          description: response.data?.message || response.statusText,
+        });
+      } else {
+        setFeedbackMood(null);
+        setFeedback('');
+        toast('Feedback received!', { description: 'Thank you for your valuable feedback.' });
+      }
+    } catch (error) {
+      console.error('Error saving feedback', error);
+      toast('Something went wrong', {
+        description: 'Internal server error while saving your feedback!',
+      });
+    }
+  };
 
   const baseIconClasses = 'cursor-pointer h-5 w-5 md:h-6 md:w-6 text-muted-foreground';
   const hoverClasses = 'transition-transform duration-200 ease-in-out hover:scale-110';
@@ -67,6 +97,7 @@ export const SiteHeader = () => {
                 <Textarea
                   className="focus-visible:ring-[none]"
                   placeholder="Type your message here."
+                  value={feedback}
                   onChange={handleFeedbackChange}
                 />
                 <div className="mt-10 flex flex-row items-center justify-between">
@@ -104,7 +135,9 @@ export const SiteHeader = () => {
                       onClick={() => handleFeedbackMoodChange(feedbackMoods.bad)}
                     />
                   </div>
-                  <Button disabled={sendDisabled}>Send</Button>
+                  <Button disabled={sendDisabled} onClick={handleFeedback}>
+                    Send
+                  </Button>
                 </div>
               </PopoverContent>
             </Popover>

@@ -1,9 +1,18 @@
+'use client';
+
+import { signInWithGoogle } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 
 export default function LoginPage() {
   return (
     <div className="flex justify-center py-56 md:py-64 lg:py-72">
-      <Button variant="default" size="lg" className="gap-4 font-medium">
+      <Button
+        onClick={() => signInWithGoogle()}
+        type="button"
+        variant="default"
+        size="lg"
+        className="gap-4 font-medium"
+      >
         <svg
           viewBox="0 0 512 512"
           xmlns="http://www.w3.org/2000/svg"

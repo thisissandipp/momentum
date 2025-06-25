@@ -27,7 +27,3 @@ export const earlyFeedback = pgTable('early_feedback', {
   feedback: text('feedback').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
-
-export type InsertUser = typeof users.$inferInsert;
-export type InsertEarlyAccess = typeof earlyAccess.$inferInsert;
-export type InsertEarlyFeedback = typeof earlyFeedback.$inferInsert;

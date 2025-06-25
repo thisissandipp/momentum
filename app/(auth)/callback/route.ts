@@ -1,7 +1,8 @@
 import { createClient } from '@/lib/supabase/server-client';
-import { type InsertUser, users } from '@/db/schema';
 import { getBrowserTimezone } from '@/lib/timezone';
+import type { InsertUser } from '@/db/types';
 import { NextResponse } from 'next/server';
+import { users } from '@/db/schema';
 import { db } from '@/db';
 
 export async function GET(request: Request) {

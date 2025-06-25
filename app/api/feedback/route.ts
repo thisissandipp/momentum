@@ -1,5 +1,6 @@
-import { earlyFeedback, InsertEarlyFeedback } from '@/db/schema';
 import { NextResponse, type NextRequest } from 'next/server';
+import type { InsertEarlyFeedback } from '@/db/types';
+import { earlyFeedback } from '@/db/schema';
 import { db } from '@/db';
 import { z } from 'zod';
 

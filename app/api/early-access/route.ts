@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { earlyAccess, InsertEarlyAccess } from '@/db/schema';
+import type { InsertEarlyAccess } from '@/db/types';
+import { earlyAccess } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { db } from '@/db';
 import { z } from 'zod';

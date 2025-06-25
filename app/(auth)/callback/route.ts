@@ -1,5 +1,8 @@
 import { createClient } from '@/lib/supabase/server-client';
+import { type InsertUser, users } from '@/db/schema';
+import { getBrowserTimezone } from '@/lib/timezone';
 import { NextResponse } from 'next/server';
+import { db } from '@/db';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -9,7 +12,21 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (data.user) {
+      const { user } = data;
+      // push the user information to the users table
+      await db.insert(users).values({
+        id: user.id,
+        displayName: user.user_metadata['full_name'] as string,
+        email: user.email!,
+        emailConfirmed: user.user_metadata['email_verified'] as boolean,
+        imageUrl: user.user_metadata['avatar_url'] || user.user_metadata['picture'],
+        timezone: getBrowserTimezone(),
+      } satisfies InsertUser);
+    }
+
     if (!error) {
       const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development';

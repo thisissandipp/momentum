@@ -3,6 +3,7 @@ import { getBrowserTimezone } from '@/lib/timezone';
 import type { InsertUser } from '@/db/types';
 import { NextResponse } from 'next/server';
 import { users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import { db } from '@/db';
 
 export async function GET(request: Request) {
@@ -17,15 +18,20 @@ export async function GET(request: Request) {
 
     if (data.user) {
       const { user } = data;
-      // push the user information to the users table
-      await db.insert(users).values({
-        id: user.id,
-        displayName: user.user_metadata['full_name'] as string,
-        email: user.email!,
-        emailConfirmed: user.user_metadata['email_verified'] as boolean,
-        imageUrl: user.user_metadata['avatar_url'] || user.user_metadata['picture'],
-        timezone: getBrowserTimezone(),
-      } satisfies InsertUser);
+      // ensure whether the user already exists in DB
+      const existingUser = await db.select().from(users).where(eq(users.id, user.id)).limit(1);
+
+      // push the user information to the users table, if it wasn't already
+      if (existingUser.length === 0) {
+        await db.insert(users).values({
+          id: user.id,
+          displayName: user.user_metadata['full_name'] as string,
+          email: user.email!,
+          emailConfirmed: user.user_metadata['email_verified'] as boolean,
+          imageUrl: user.user_metadata['avatar_url'] || user.user_metadata['picture'],
+          timezone: getBrowserTimezone(),
+        } satisfies InsertUser);
+      }
     }
 
     if (!error) {

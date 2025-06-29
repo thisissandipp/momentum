@@ -1,0 +1,17 @@
+export const domains = [
+  'Physical Fitness',
+  'Nutrition & Eating Habits',
+  'Sleep & Recovery',
+  'Mental Well-being',
+  'Emotional Intelligence',
+  'Financial Management',
+  'Career Development',
+  'Skill Acquisition',
+  'Productivity & Organization',
+  'Close Relationships',
+  'Social Connections',
+  'Lifelong Learning',
+  'Creative Expression',
+  'Mindfulness & Inner Peace',
+  'Contribution & Purpose',
+] as const;

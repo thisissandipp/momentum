@@ -2,13 +2,12 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { habitArchitectPrompt } from '@/lib/prompts';
 import { currentUser } from '@/lib/current-user';
 import { google } from '@ai-sdk/google';
-import { domains } from '@/lib/domains';
 import { habitSchema } from '@/types';
 import { generateObject } from 'ai';
 import { z } from 'zod';
 
 const bodySchema = z.object({
-  domain: z.enum(domains),
+  domain: z.string(),
   oneYearGoal: z.string().min(15, 'Minimum 15 charaters are required'),
   currentState: z.string().min(15, 'Minimum 15 charaters are required'),
 });

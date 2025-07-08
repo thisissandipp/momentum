@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server-client';
 import { getBrowserTimezone } from '@/lib/timezone';
-import type { InsertUser, User } from '@/db/types';
+import type { InsertUser } from '@/db/types';
 import { NextResponse } from 'next/server';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
@@ -10,12 +10,11 @@ export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
   // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get('next') ?? '/dashboard';
+  const next = searchParams.get('next') ?? '/dashboard';
 
   if (code) {
     const supabase = await createClient();
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-    let currentUser: User | null = null;
 
     if (data.user) {
       const { user } = data;
@@ -32,16 +31,14 @@ export async function GET(request: Request) {
           imageUrl: user.user_metadata['avatar_url'] || user.user_metadata['picture'],
           timezone: getBrowserTimezone(),
         } satisfies InsertUser);
-      } else {
-        currentUser = existingUsers[0];
       }
     }
 
     if (!error) {
       // Check if the onboarding is completed for the user.
-      if (currentUser && !currentUser.onboardingCompleted) {
-        next = '/onboarding/goal';
-      }
+      // if (currentUser && !currentUser.onboardingCompleted) {
+      //   next = '/onboarding/goal';
+      // }
 
       const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development';

@@ -1,9 +1,9 @@
 'use client';
 
+import { AlertCircleIcon, ChevronRightIcon, Loader2, XIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useOnboardingStore } from '@/providers/onboarding-store-provider';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
-import { AlertCircleIcon, Loader2, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
@@ -112,6 +112,11 @@ export default function SuggestionsPage() {
                   </CardFooter>
                 </Card>
               ))}
+            </div>
+            <div className="mt-18 flex justify-end">
+              <Button>
+                Go to Dashboard <ChevronRightIcon />
+              </Button>
             </div>
           </div>
         </>

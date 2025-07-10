@@ -15,6 +15,22 @@ export const users = pgTable('users', {
   lastActiveAt: timestamp('last_active_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const goals = pgTable('goals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: uuid('user_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  domain: text('domain').notNull().default('General'),
+  emoji: text('emoji'),
+  whyReason: text('why_reason'),
+  currentState: text('current_state'),
+  targetDate: timestamp('target_date', { withTimezone: true }),
+  isActive: boolean('is_active').notNull().default(true),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const earlyAccess = pgTable('early_access', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').notNull().unique(),

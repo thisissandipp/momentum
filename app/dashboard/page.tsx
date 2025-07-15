@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { CreateGoalsBodySchema } from '@/app/api/goals/route';
 import { ChevronDownIcon, PlusIcon } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
@@ -71,7 +72,13 @@ export default function DashboardPage() {
   const domain = createGoalForm.watch('domain');
 
   const onSubmit = async (values: z.infer<typeof createGoalFormSchema>) => {
-    console.log(values);
+    try {
+      const response = await axios.post('/api/goals', values satisfies CreateGoalsBodySchema);
+      createGoalForm.reset();
+      console.log('Goal created successfully:', response.data);
+    } catch (error) {
+      console.error('Failed to create goal', error);
+    }
   };
 
   useEffect(() => {

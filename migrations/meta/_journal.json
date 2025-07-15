@@ -15,6 +15,13 @@
       "when": 1750584592218,
       "tag": "0001_flaky_karen_page",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752608296415,
+      "tag": "0002_safe_chat",
+      "breakpoints": true
     }
   ]
 }

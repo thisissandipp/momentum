@@ -27,3 +27,11 @@ export const earlyFeedback = pgTable('early_feedback', {
   feedback: text('feedback').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
+
+export const storyResponses = pgTable('story_responses', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  respondentName: text('respondent_name'),
+  contactInfo: text('contact_info'),
+  response: text('response').notNull(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});

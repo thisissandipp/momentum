@@ -36,11 +36,13 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const publicRoutes = ['/login', '/callback', '/story'];
+  const apiPublicRoutes = ['/api/early-access', '/api/feedback', '/api/story-response'];
 
   // no user, potentially respond by redirecting the user to the login page
   if (
     !user &&
     !publicRoutes.some((path) => request.nextUrl.pathname.startsWith(path)) &&
+    !apiPublicRoutes.some((path) => request.nextUrl.pathname.startsWith(path)) &&
     request.nextUrl.pathname !== '/'
   ) {
     // no user, potentially respond by redirecting the user to the login page

@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Geist, Geist_Mono } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
 import './globals.css';
@@ -59,6 +60,7 @@ export default function RootLayout({
           <div className="bg-background relative">{children}</div>
         </ThemeProvider>
         <Toaster />
+        <Analytics />
       </body>
     </html>
   );

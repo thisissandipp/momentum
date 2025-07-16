@@ -16,15 +16,13 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Momentum - Build Unstoppable Habits',
-  description:
-    'Momentum is your intelligent companion for building lasting habits, gaining proactive insights, and achieving continuous personal growth. Join early access!',
+  description: `Momentum is your intelligent companion for building lasting habits, gaining proactive insights, and achieving continuous personal growth. Join early access!`,
   openGraph: {
     type: 'website',
     locale: 'en-US',
     url: 'https://findmomentum.app',
     title: 'Momentum - Build Unstoppable Habits',
-    description:
-      'Your intelligent companion for lasting habits & personal growth. Join early access!',
+    description: `Your intelligent companion for lasting habits & personal growth. Join early access!`,
     siteName: 'Momentum',
     images: [
       {
@@ -38,8 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Momentum - Build Unstoppable Habits',
-    description:
-      'Your intelligent companion for lasting habits & personal growth. Join early access!',
+    description: `Your intelligent companion for lasting habits & personal growth. Join early access!`,
     creator: '@thisissandipp',
     images: 'https://findmomentum.app/og-image.png',
   },

@@ -35,7 +35,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const publicRoutes = ['/login', '/callback'];
+  const publicRoutes = ['/login', '/callback', '/story'];
 
   // no user, potentially respond by redirecting the user to the login page
   if (

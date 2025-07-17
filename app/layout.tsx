@@ -1,3 +1,4 @@
+import { GoalStoreProvider } from '@/providers/goal-store-provider';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
@@ -57,7 +58,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="bg-background relative">{children}</div>
+          <GoalStoreProvider>
+            <div className="bg-background relative">{children}</div>
+          </GoalStoreProvider>
         </ThemeProvider>
         <Toaster />
         <Analytics />

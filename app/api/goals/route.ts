@@ -23,8 +23,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const body = await req.json();
-  const parsed = bodySchema.safeParse(body);
+  const rawBody = await req.json();
+
+  // Sanitize targetDate if it's a string before parsing it.
+  // This is to ensure that the date is in the correct format.
+  if (rawBody.targetDate && typeof rawBody.targetDate === 'string') {
+    rawBody.targetDate = new Date(rawBody.targetDate);
+  }
+
+  const parsed = bodySchema.safeParse(rawBody);
 
   if (!parsed.success) {
     return NextResponse.json({ message: parsed.error.message }, { status: 400 });
@@ -36,7 +43,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     .values({
       title,
       domain,
-      targetDate,
+      targetDate: new Date(targetDate),
       emoji,
       whyReason,
       currentState,
@@ -44,7 +51,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     } satisfies InsertGoal)
     .returning();
 
-  return NextResponse.json({ goal: newGoal }, { status: 201 });
+  return NextResponse.json({ goal: newGoal[0] }, { status: 201 });
 }
 
 export async function GET(): Promise<NextResponse> {

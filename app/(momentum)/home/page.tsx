@@ -19,7 +19,7 @@ import { PlusIcon } from 'lucide-react';
 import { User } from '@/db/types';
 import axios from 'axios';
 
-export default function DashboardPage() {
+export default function HomePage() {
   const [user, setUser] = useState<User | null>(null);
   const [goalSheetOpen, setGoalSheetOpen] = useState(false);
 
@@ -49,7 +49,7 @@ export default function DashboardPage() {
     };
 
     if (user) {
-      document.title = `Dashboard - ${user.displayName}`;
+      document.title = `Momentum - ${user.displayName}`;
       fetchGoals();
     }
   }, [setGoals, user]);

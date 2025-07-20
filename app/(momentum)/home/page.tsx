@@ -9,13 +9,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { GoalCreationForm, goalCreationFormId } from '@/components/goals/goal-creation-form';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { GoalForm, goalFormId } from '@/components/goals/goal-form';
 import { useGoalStore } from '@/providers/goal-store-provider';
 import { GoalCard } from '@/components/goals/goal-card';
+import { PlusIcon, TrophyIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import { PlusIcon } from 'lucide-react';
 import { User } from '@/db/types';
 import axios from 'axios';
 
@@ -84,14 +84,14 @@ export default function HomePage() {
                   </SheetTrigger>
                   <SheetContent className="max-h-screen overflow-y-scroll">
                     <SheetHeader>
-                      <SheetTitle>Create new goal</SheetTitle>
+                      <SheetTitle>New Goal</SheetTitle>
                     </SheetHeader>
-                    <GoalCreationForm onSuccess={() => setGoalSheetOpen(false)} />
+                    <GoalForm onSuccess={() => setGoalSheetOpen(false)} />
                     <SheetFooter className="flex flex-row justify-end gap-x-4">
                       <SheetClose asChild>
                         <Button variant="outline">Close</Button>
                       </SheetClose>
-                      <Button type="submit" form={goalCreationFormId}>
+                      <Button type="submit" form={goalFormId}>
                         Create
                       </Button>
                     </SheetFooter>
@@ -103,7 +103,33 @@ export default function HomePage() {
         )}
         {goals.length > 0 && (
           <div className="mt-10">
-            <div className="flex flex-wrap items-center justify-center gap-6">
+            <div className="mx-1.5 flex flex-row items-center justify-between">
+              <p className="text-muted-foreground flex flex-row items-center gap-x-1.5 text-sm">
+                <TrophyIcon className="h-4 w-4" /> All Your Goals
+              </p>
+              <Sheet open={goalSheetOpen} onOpenChange={setGoalSheetOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="link" size="sm" className="text">
+                    <PlusIcon /> New Goal
+                  </Button>
+                </SheetTrigger>
+                <SheetContent className="max-h-screen overflow-y-scroll">
+                  <SheetHeader>
+                    <SheetTitle>New Goal</SheetTitle>
+                  </SheetHeader>
+                  <GoalForm onSuccess={() => setGoalSheetOpen(false)} />
+                  <SheetFooter className="flex flex-row justify-end gap-x-4">
+                    <SheetClose asChild>
+                      <Button variant="outline">Close</Button>
+                    </SheetClose>
+                    <Button type="submit" form={goalFormId}>
+                      Create
+                    </Button>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
+            </div>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-6">
               {goals.map((goal) => (
                 <GoalCard key={goal.id} {...goal} />
               ))}

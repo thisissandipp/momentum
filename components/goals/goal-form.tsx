@@ -16,7 +16,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { type CreateGoalsBodySchema } from '@/app/api/goals/route';
+import { type UpdateGoalBody } from '@/app/api/goals/[id]/route';
+import { useGoalStore } from '@/providers/goal-store-provider';
+import { type CreateGoalBody } from '@/app/api/goals/route';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
@@ -26,11 +28,12 @@ import { ChevronDownIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { domains } from '@/lib/domains';
+import type { Goal } from '@/db/types';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { z } from 'zod';
 
-const createGoalFormSchema = z.object({
+const goalFormSchema = z.object({
   title: z.string().min(3, { message: 'needs a name! what are you working towards?' }),
   domain: z.string().optional(),
   targetDate: z.date({
@@ -41,29 +44,49 @@ const createGoalFormSchema = z.object({
   currentState: z.string().optional(),
 });
 
-export const goalCreationFormId = 'goal-creation-form';
+export const goalFormId = 'goal-form';
 
-export const GoalCreationForm = ({ onSuccess }: { onSuccess: () => void }) => {
-  const createGoalForm = useForm<z.infer<typeof createGoalFormSchema>>({
-    resolver: zodResolver(createGoalFormSchema),
+export interface GoalFormProps {
+  goal?: Goal;
+  onSuccess: () => void;
+}
+
+export const GoalForm = ({ goal, onSuccess }: GoalFormProps) => {
+  const { addGoal, updateGoal } = useGoalStore((store) => store);
+
+  console.log('Target Date', goal?.targetDate, typeof goal?.targetDate);
+  const now = new Date();
+
+  const goalForm = useForm<z.infer<typeof goalFormSchema>>({
+    resolver: zodResolver(goalFormSchema),
     defaultValues: {
-      title: '',
-      domain: '',
-      targetDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000),
-      emoji: '🎯',
-      whyReason: '',
-      currentState: '',
+      title: goal?.title || '',
+      domain: goal?.domain || '',
+      targetDate: goal?.targetDate
+        ? new Date(goal.targetDate)
+        : new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      emoji: goal?.emoji || '🎯',
+      whyReason: goal?.whyReason || '',
+      currentState: goal?.currentState || '',
     },
   });
 
-  const domain = createGoalForm.watch('domain');
+  const domain = goalForm.watch('domain');
 
-  const onSubmit = async (values: z.infer<typeof createGoalFormSchema>) => {
-    console.log('Submitting goal creation form with values:', values);
+  const onSubmit = async (values: z.infer<typeof goalFormSchema>) => {
+    console.log('Submitting goal create/update form with values:', values);
     try {
-      const response = await axios.post('/api/goals', values satisfies CreateGoalsBodySchema);
-      createGoalForm.reset();
-      console.log('Goal created successfully:', response.data.goal);
+      if (!goal) {
+        const response = await axios.post('/api/goals', values satisfies CreateGoalBody);
+        addGoal(response.data.goal);
+      } else {
+        const response = await axios.patch(
+          `/api/goals/${goal.id}`,
+          values satisfies UpdateGoalBody,
+        );
+        updateGoal(goal.id, response.data.goal);
+      }
+      goalForm.reset();
       onSuccess();
     } catch (error) {
       console.error('Failed to create goal', error);
@@ -72,21 +95,17 @@ export const GoalCreationForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   useEffect(() => {
     const matchedDomain = domains.find((d) => d.name == domain);
-    createGoalForm.setValue('emoji', matchedDomain?.emoji ?? '🎯', {
+    goalForm.setValue('emoji', matchedDomain?.emoji ?? '🎯', {
       shouldValidate: true,
       shouldDirty: true,
     });
-  }, [createGoalForm, domain]);
+  }, [goalForm, domain]);
 
   return (
-    <Form {...createGoalForm}>
-      <form
-        id={goalCreationFormId}
-        onSubmit={createGoalForm.handleSubmit(onSubmit)}
-        className="mx-4 space-y-8"
-      >
+    <Form {...goalForm}>
+      <form id={goalFormId} onSubmit={goalForm.handleSubmit(onSubmit)} className="mx-4 space-y-8">
         <FormField
-          control={createGoalForm.control}
+          control={goalForm.control}
           name="emoji"
           render={({ field }) => (
             <FormItem>
@@ -97,7 +116,7 @@ export const GoalCreationForm = ({ onSuccess }: { onSuccess: () => void }) => {
           )}
         />
         <FormField
-          control={createGoalForm.control}
+          control={goalForm.control}
           name="title"
           render={({ field }) => (
             <FormItem>
@@ -117,7 +136,7 @@ export const GoalCreationForm = ({ onSuccess }: { onSuccess: () => void }) => {
           )}
         />
         <FormField
-          control={createGoalForm.control}
+          control={goalForm.control}
           name="domain"
           render={({ field }) => (
             <FormItem>
@@ -142,7 +161,7 @@ export const GoalCreationForm = ({ onSuccess }: { onSuccess: () => void }) => {
           )}
         />
         <FormField
-          control={createGoalForm.control}
+          control={goalForm.control}
           name="targetDate"
           render={({ field }) => (
             <FormItem>
@@ -177,7 +196,7 @@ export const GoalCreationForm = ({ onSuccess }: { onSuccess: () => void }) => {
           )}
         />
         <FormField
-          control={createGoalForm.control}
+          control={goalForm.control}
           name="whyReason"
           render={({ field }) => (
             <FormItem>
@@ -197,7 +216,7 @@ export const GoalCreationForm = ({ onSuccess }: { onSuccess: () => void }) => {
           )}
         />
         <FormField
-          control={createGoalForm.control}
+          control={goalForm.control}
           name="currentState"
           render={({ field }) => (
             <FormItem>

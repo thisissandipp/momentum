@@ -15,7 +15,7 @@ const bodySchema = z.object({
   currentState: z.string().optional(),
 });
 
-export type CreateGoalsBodySchema = z.infer<typeof bodySchema>;
+export type CreateGoalBody = z.infer<typeof bodySchema>;
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   const user = await currentUser();

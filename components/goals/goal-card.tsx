@@ -1,9 +1,22 @@
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { GoalForm, goalFormId } from '@/components/goals/goal-form';
 import { ChevronRightIcon, HourglassIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import type { Goal } from '@/db/types';
+import { useState } from 'react';
 
 export const GoalCard = (goal: Goal) => {
+  const [goalSheetOpen, setGoalSheetOpen] = useState(false);
+
   const today = new Date();
   const timeLeft = goal.targetDate
     ? Math.max(0, new Date(goal.targetDate).getTime() - today.getTime())
@@ -37,9 +50,27 @@ export const GoalCard = (goal: Goal) => {
           <p className="text-muted-foreground text-xs">{targetDateLeftString}</p>
         </div>
       </div>
-      <Button variant="link" size="sm" className="mt-4 ml-[-4px]">
-        View Details <ChevronRightIcon />
-      </Button>
+      <Sheet open={goalSheetOpen} onOpenChange={setGoalSheetOpen}>
+        <SheetTrigger asChild>
+          <Button variant="link" size="sm" className="mt-4 ml-[-4px]">
+            View Details <ChevronRightIcon />
+          </Button>
+        </SheetTrigger>
+        <SheetContent className="max-h-screen overflow-y-scroll">
+          <SheetHeader>
+            <SheetTitle>Edit Goal</SheetTitle>
+          </SheetHeader>
+          <GoalForm goal={goal} onSuccess={() => setGoalSheetOpen(false)} />
+          <SheetFooter className="flex flex-row justify-end gap-x-4">
+            <SheetClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </SheetClose>
+            <Button type="submit" form={goalFormId}>
+              Save
+            </Button>
+          </SheetFooter>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

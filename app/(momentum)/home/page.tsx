@@ -9,13 +9,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { ChevronLeftIcon, ChevronRightIcon, PlusIcon, TrophyIcon } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { GoalForm, goalFormId } from '@/components/goals/goal-form';
+import { CARD_WIDTH, GoalCard } from '@/components/goals/goal-card';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGoalStore } from '@/providers/goal-store-provider';
-import { GoalCard } from '@/components/goals/goal-card';
-import { PlusIcon, TrophyIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
 import { User } from '@/db/types';
 import axios from 'axios';
 
@@ -24,6 +24,40 @@ export default function HomePage() {
   const [goalSheetOpen, setGoalSheetOpen] = useState(false);
 
   const { goals, setGoals } = useGoalStore((store) => store);
+
+  // Refs for the scrollable container
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // State for goals section scroll capabilities
+  const [isHovered, setIsHovered] = useState(false);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const CARD_SPACING = 24;
+  const SCROLL_AMOUNT = CARD_WIDTH + CARD_SPACING;
+
+  // Function to check scrollability
+  const checkScrollability = useCallback(() => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 1); // -1 for floating point precision
+    }
+  }, []);
+
+  // Scroll handlers
+  const scroll = useCallback(
+    (direction: 'left' | 'right') => {
+      if (scrollContainerRef.current) {
+        const scrollByAmount = direction === 'left' ? -SCROLL_AMOUNT : SCROLL_AMOUNT;
+        scrollContainerRef.current.scrollBy({
+          left: scrollByAmount,
+          behavior: 'smooth',
+        });
+      }
+    },
+    [SCROLL_AMOUNT],
+  );
 
   useEffect(() => {
     const currentUser = async () => {
@@ -53,6 +87,17 @@ export default function HomePage() {
       fetchGoals();
     }
   }, [setGoals, user]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (container) {
+      checkScrollability();
+      container.addEventListener('scroll', checkScrollability);
+      return () => {
+        container.removeEventListener('scroll', checkScrollability);
+      };
+    }
+  }, [checkScrollability, goals]);
 
   return (
     <div className="mx-8">
@@ -129,10 +174,44 @@ export default function HomePage() {
                 </SheetContent>
               </Sheet>
             </div>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-6">
-              {goals.map((goal) => (
-                <GoalCard key={goal.id} {...goal} />
-              ))}
+            <div
+              className="relative mt-4"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+            >
+              <div
+                ref={scrollContainerRef}
+                style={{ '--card-spacing': `${CARD_SPACING}px` } as React.CSSProperties}
+                className="scrollbar-hidden flex space-x-[var(--card-spacing)] overflow-x-auto pb-4"
+              >
+                {goals.map((goal) => (
+                  <div key={goal.id} className="flex-shrink-0">
+                    <GoalCard {...goal} />
+                  </div>
+                ))}
+              </div>
+
+              {isHovered && canScrollLeft && (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="absolute top-1/2 left-[-20px] z-10 -translate-y-1/2 rounded-full shadow-lg"
+                  onClick={() => scroll('left')}
+                >
+                  <ChevronLeftIcon className="h-6 w-6" />
+                </Button>
+              )}
+
+              {isHovered && canScrollRight && (
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="absolute top-1/2 right-[-20px] z-10 -translate-y-1/2 rounded-full shadow-lg"
+                  onClick={() => scroll('right')}
+                >
+                  <ChevronRightIcon className="h-6 w-6" />
+                </Button>
+              )}
             </div>
           </div>
         )}

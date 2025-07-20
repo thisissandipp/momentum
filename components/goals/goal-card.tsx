@@ -14,6 +14,8 @@ import { Badge } from '@/components/ui/badge';
 import type { Goal } from '@/db/types';
 import { useState } from 'react';
 
+export const CARD_WIDTH = 240;
+
 export const GoalCard = (goal: Goal) => {
   const [goalSheetOpen, setGoalSheetOpen] = useState(false);
 
@@ -38,13 +40,16 @@ export const GoalCard = (goal: Goal) => {
   }
 
   return (
-    <div className="bg-muted dark:bg-card flex w-60 flex-col items-start justify-between rounded-2xl p-5">
+    <div
+      style={{ '--card-width': `${CARD_WIDTH}px` } as React.CSSProperties}
+      className="bg-muted dark:bg-card flex w-[var(--card-width)] flex-col items-start justify-between rounded-2xl p-5"
+    >
       <div>
         <div className="text-4xl">{goal.emoji}</div>
         <div className="mt-4 flex flex-row gap-x-2.5">
           <Badge variant="outline">{goal.domain}</Badge>
         </div>
-        <h3 className="mt-2 ml-1.5 text-xl font-semibold">{goal.title}</h3>
+        <h3 className="mt-2 ml-1.5 line-clamp-2 text-xl font-semibold">{goal.title}</h3>
         <div className="m-1.5 mt-2.5 flex flex-row items-center gap-x-1.5">
           <HourglassIcon className="text-muted-foreground h-3 w-3" />
           <p className="text-muted-foreground text-xs">{targetDateLeftString}</p>

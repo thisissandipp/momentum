@@ -31,6 +31,17 @@ export const goals = pgTable('goals', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const checkpoints = pgTable('checkpoints', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  goalId: uuid('goal_id')
+    .notNull()
+    .references(() => goals.id, { onDelete: 'cascade' }),
+  objective: text('objective').notNull(),
+  isCompleted: boolean('is_completed').notNull().default(false),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const earlyAccess = pgTable('early_access', {
   id: uuid('id').primaryKey().defaultRandom(),
   email: text('email').notNull().unique(),

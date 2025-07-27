@@ -11,12 +11,14 @@ import { GoalForm, goalFormId } from '@/components/goals/goal-form';
 import { ChevronRightIcon, HourglassIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useRouter } from 'next/navigation';
 import type { Goal } from '@/db/types';
 import { useState } from 'react';
 
 export const CARD_WIDTH = 240;
 
 export const GoalCard = (goal: Goal) => {
+  const router = useRouter();
   const [goalSheetOpen, setGoalSheetOpen] = useState(false);
 
   const today = new Date();
@@ -44,7 +46,7 @@ export const GoalCard = (goal: Goal) => {
       style={{ '--card-width': `${CARD_WIDTH}px` } as React.CSSProperties}
       className="bg-muted dark:bg-card flex w-[var(--card-width)] flex-col items-start justify-between rounded-2xl p-5"
     >
-      <div>
+      <div className="cursor-pointer" onClick={() => router.push(`/goals/${goal.id}`)}>
         <div className="text-4xl">{goal.emoji}</div>
         <div className="mt-4 flex flex-row gap-x-2.5">
           <Badge variant="outline">{goal.domain}</Badge>
@@ -57,8 +59,13 @@ export const GoalCard = (goal: Goal) => {
       </div>
       <Sheet open={goalSheetOpen} onOpenChange={setGoalSheetOpen}>
         <SheetTrigger asChild>
-          <Button variant="link" size="sm" className="mt-4 ml-[-4px]">
-            View Details <ChevronRightIcon />
+          <Button
+            variant="link"
+            size="sm"
+            className="mt-4 ml-[-4px]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Edit Details <ChevronRightIcon />
           </Button>
         </SheetTrigger>
         <SheetContent className="max-h-screen overflow-y-scroll">

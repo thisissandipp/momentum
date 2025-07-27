@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from 'next/server';
+import type { Goal, InsertGoal } from '@/db/types';
 import { currentUser } from '@/lib/current-user';
-import { InsertGoal } from '@/db/types';
 import { and, eq } from 'drizzle-orm';
 import { goals } from '@/db/schema';
 import { db } from '@/db';
@@ -18,6 +18,31 @@ const bodySchema = z.object({
 });
 
 export type UpdateGoalBody = z.infer<typeof bodySchema>;
+
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+): Promise<NextResponse> {
+  const user = await currentUser();
+  if (!user) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { id } = await params;
+  const parsed = uuidSchema.safeParse(id);
+
+  if (!parsed.success) {
+    return NextResponse.json({ message: parsed.error.message }, { status: 400 });
+  }
+
+  const [goal] = await db.select().from(goals).where(eq(goals.id, parsed.data));
+
+  if (!goal || goal.userId !== user.id) {
+    return NextResponse.json({ message: 'Not Found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ goal: goal satisfies Goal }, { status: 200 });
+}
 
 export async function PATCH(
   req: NextRequest,

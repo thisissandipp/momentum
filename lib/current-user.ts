@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server-client';
 import { users } from '@/db/schema';
-import { User } from '@/db/types';
 import { eq } from 'drizzle-orm';
+import { User } from '@/types';
 import { db } from '@/db';
 
 export const currentUser = async (): Promise<User | null> => {

@@ -13,7 +13,7 @@ import {
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from '@/components/ui/collapsible';
 import { BlocksIcon, ChevronRightIcon, PlusIcon } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Goal } from '@/db/types';
+import { Goal } from '@/types';
 import Link from 'next/link';
 
 export const NavigationGoals = ({ goals }: { goals: Goal[] }) => {

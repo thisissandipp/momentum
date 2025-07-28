@@ -1,8 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import type { Goal, InsertGoal } from '@/db/types';
 import { currentUser } from '@/lib/current-user';
-import { desc, eq } from 'drizzle-orm';
-import { goals } from '@/db/schema';
+import { checkpoints, goals } from '@/db/schema';
+import type { InsertGoal } from '@/db/types';
+import { asc, desc, eq } from 'drizzle-orm';
+import { Goal } from '@/types';
 import { db } from '@/db';
 import { z } from 'zod';
 
@@ -54,17 +55,22 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   return NextResponse.json({ goal: newGoal[0] }, { status: 201 });
 }
 
+// Return [Goal] with [Checkpoint]s added.
 export async function GET(): Promise<NextResponse> {
   const user = await currentUser();
   if (!user) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const userGoals = await db
-    .select()
-    .from(goals)
-    .where(eq(goals.userId, user.id))
-    .orderBy(desc(goals.createdAt));
+  const allGoals = await db.query.goals.findMany({
+    where: eq(goals.userId, user.id),
+    orderBy: desc(goals.createdAt),
+    with: {
+      checkpoints: {
+        orderBy: asc(checkpoints.createdAt),
+      },
+    },
+  });
 
-  return NextResponse.json({ goals: userGoals satisfies Goal[] });
+  return NextResponse.json({ goals: allGoals satisfies Goal[] });
 }

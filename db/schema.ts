@@ -1,4 +1,5 @@
 import { boolean, jsonb, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
 export const users = pgTable('users', {
   // The `id` to be mapped with the auth.users.id from supabase auth users table
@@ -31,6 +32,10 @@ export const goals = pgTable('goals', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const goalsRelations = relations(goals, ({ many }) => ({
+  checkpoints: many(checkpoints),
+}));
+
 export const checkpoints = pgTable('checkpoints', {
   id: uuid('id').primaryKey().defaultRandom(),
   goalId: uuid('goal_id')
@@ -41,6 +46,13 @@ export const checkpoints = pgTable('checkpoints', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 });
+
+export const checkpointsRelations = relations(checkpoints, ({ one }) => ({
+  goal: one(goals, {
+    fields: [checkpoints.goalId],
+    references: [goals.id],
+  }),
+}));
 
 export const earlyAccess = pgTable('early_access', {
   id: uuid('id').primaryKey().defaultRandom(),

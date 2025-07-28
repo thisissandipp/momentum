@@ -1,6 +1,6 @@
 import { currentUser } from '@/lib/current-user';
 import { NextResponse } from 'next/server';
-import { User } from '@/db/types';
+import { SelectUser } from '@/db/types';
 
 export async function GET(): Promise<NextResponse> {
   try {
@@ -11,7 +11,7 @@ export async function GET(): Promise<NextResponse> {
         { status: 401 },
       );
     }
-    return NextResponse.json({ user: user satisfies User }, { status: 200 });
+    return NextResponse.json({ user: user satisfies SelectUser }, { status: 200 });
   } catch (error) {
     console.error('Error fetching user', error);
     return NextResponse.json(

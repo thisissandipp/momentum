@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import type { Goal, InsertGoal } from '@/db/types';
+import type { SelectGoal, InsertGoal } from '@/db/types';
 import { currentUser } from '@/lib/current-user';
 import { and, eq } from 'drizzle-orm';
 import { goals } from '@/db/schema';
@@ -41,7 +41,7 @@ export async function GET(
     return NextResponse.json({ message: 'Not Found' }, { status: 404 });
   }
 
-  return NextResponse.json({ goal: goal satisfies Goal }, { status: 200 });
+  return NextResponse.json({ goal: goal satisfies SelectGoal }, { status: 200 });
 }
 
 export async function PATCH(
@@ -94,5 +94,5 @@ export async function PATCH(
     .where(and(eq(goals.id, parsed.data), eq(goals.userId, user.id)))
     .returning();
 
-  return NextResponse.json({ goal: updatedGoal }, { status: 201 });
+  return NextResponse.json({ goal: updatedGoal satisfies SelectGoal }, { status: 201 });
 }

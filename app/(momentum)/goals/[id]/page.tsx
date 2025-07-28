@@ -1,6 +1,15 @@
 'use client';
 
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -11,42 +20,79 @@ import { BlocksIcon, CheckCircle2Icon, PlusIcon } from 'lucide-react';
 import { useGoalStore } from '@/providers/goal-store-provider';
 import { formatDateToString } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Goal } from '@/db/types';
+import { Goal } from '@/types';
+import { toast } from 'sonner';
 import axios from 'axios';
 
 export default function GoalDetailsPage() {
-  const { goals } = useGoalStore((store) => store);
+  const { goals, status, setGoals, addCheckpoint, setStatus } = useGoalStore((store) => store);
   const { id } = useParams();
 
   const [goal, setGoal] = useState<Goal | null>(null);
-  const [state, setState] = useState<'initial' | 'loading' | 'success' | 'failed'>('initial');
+
+  const [objective, setObjective] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const onCreate = async () => {
+    setIsSubmitting(true);
+    if (objective.length === 0) {
+      toast('Checkpoint can not be empty', {
+        description: 'Please enter a valid checkpoint before proceeding.',
+      });
+      return;
+    }
+
+    try {
+      const response = await axios.post(`/api/goals/${id}/checkpoints`, { objective });
+      const { checkpoint } = response.data;
+      if (!checkpoint) {
+        toast('Checkpoint creation failed', {
+          description: `Error: ${response.data.message}`,
+        });
+      }
+      addCheckpoint(`${id}`, checkpoint);
+    } catch (error) {
+      console.error('Error in creating checkpoint', error);
+      toast('An error has occurred', {
+        description: 'We could not process the request. Please try after some time.',
+      });
+    } finally {
+      setObjective('');
+      setDialogOpen(false);
+    }
+
+    setIsSubmitting(false);
+  };
 
   useEffect(() => {
-    setState('loading');
-    const fetchGoalById = async () => {
+    const fetchGoals = async () => {
+      setStatus('loading');
       try {
-        const response = await axios.get(`/api/goals/${id}`);
-        setGoal(response.data.goal);
-        setState('success');
+        const response = await axios.get(`/api/goals`);
+        setGoals(response.data.goals satisfies Goal[]);
+        setStatus('success');
       } catch (e) {
         console.error('Error fetching goal', e);
-        setState('failed');
+        setStatus('failed');
       }
     };
+
+    if (status !== 'success') {
+      fetchGoals();
+    }
 
     const goalIndex = goals.findIndex((goal) => goal.id === id);
     if (goalIndex !== -1) {
       setGoal(goals[goalIndex]);
-      setState('success');
-    } else {
-      fetchGoalById();
     }
-  }, [goals, id]);
+  }, [goals, id, setGoals, setStatus, status]);
 
-  if (state === 'initial' || state === 'loading') {
+  if (status === 'initial' || status === 'loading') {
     return (
       <div className="mx-8">
         <div className="mx-auto mt-10 max-w-3xl">Loading...</div>
@@ -61,14 +107,6 @@ export default function GoalDetailsPage() {
       </div>
     );
   }
-
-  const checkpoints = [
-    'Phase 1: Build Foundational Strength',
-    'Phase 2: Focused Muscle Hypertrophy',
-    'Phase 3: Dial-in Nutrition & Body Composition',
-    'Phase 4: Refine Aesthetics & Address Weaknesses',
-    'Phase 5: Achieve Peak Physique & Sustain',
-  ];
 
   return (
     <div className="mx-8">
@@ -108,23 +146,52 @@ export default function GoalDetailsPage() {
           <WhyImportantSheet />
         </div>
         <div>
-          <Button
-            variant="secondary"
-            size="sm"
-            className="text-primary bg-primary/20 hover:bg-primary/20 hover:text-primary my-2.5 font-semibold"
-          >
-            <PlusIcon /> New Checkpoint
-          </Button>
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <form>
+              <DialogTrigger asChild>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="text-primary bg-primary/20 hover:bg-primary/20 hover:text-primary my-2.5 font-semibold"
+                >
+                  <PlusIcon /> New Checkpoint
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                  <DialogTitle>Create a new Checkpoint</DialogTitle>
+                  <DialogDescription>
+                    Give it a meaningful objective. You can always change it later.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="flex items-center space-x-2">
+                  <div className="grid flex-1 gap-2">
+                    <Input
+                      placeholder="Enter an objective"
+                      value={objective}
+                      disabled={isSubmitting}
+                      onChange={(e) => setObjective(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <DialogFooter className="sm:justify-start">
+                  <Button type="button" variant="default" onClick={onCreate}>
+                    Add Checkpoint
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </form>
+          </Dialog>
           <Accordion type="single" collapsible className="w-full">
-            {checkpoints.map((checkpoint) => (
-              <AccordionItem key={checkpoint} value={checkpoint}>
+            {goal.checkpoints.map((checkpoint) => (
+              <AccordionItem key={checkpoint.id} value={checkpoint.id}>
                 <AccordionTrigger>
                   <div className="mt-4 flex flex-row items-center gap-5">
                     <div className="bg-primary/20 border-primary/20 h-10.5 w-10.5 rounded-lg border p-2">
                       <CheckCircle2Icon className="text-primary" />
                     </div>
                     <div className="flex flex-col">
-                      <p className="">{checkpoint}</p>
+                      <p className="">{checkpoint.objective}</p>
                       <p className="text-muted-foreground text-sm">12 tasks, 4 completed</p>
                     </div>
                   </div>

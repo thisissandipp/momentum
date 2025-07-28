@@ -12,8 +12,8 @@ import { ChevronRightIcon, HourglassIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useRouter } from 'next/navigation';
-import type { Goal } from '@/db/types';
 import { useState } from 'react';
+import { Goal } from '@/types';
 
 export const CARD_WIDTH = 240;
 

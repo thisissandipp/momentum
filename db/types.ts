@@ -1,8 +1,8 @@
 import { earlyAccess, earlyFeedback, storyResponses, goals, users, checkpoints } from '@/db/schema';
 
-export type User = typeof users.$inferSelect;
-export type Goal = typeof goals.$inferSelect;
-export type Checkpoint = typeof checkpoints.$inferSelect;
+export type SelectUser = typeof users.$inferSelect;
+export type SelectGoal = typeof goals.$inferSelect;
+export type SelectCheckpoint = typeof checkpoints.$inferSelect;
 
 export type InsertUser = typeof users.$inferInsert;
 export type InsertGoal = typeof goals.$inferInsert;

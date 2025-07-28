@@ -28,8 +28,8 @@ import { ChevronDownIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { domains } from '@/lib/domains';
-import type { Goal } from '@/db/types';
 import { useEffect } from 'react';
+import { Goal } from '@/types';
 import axios from 'axios';
 import { z } from 'zod';
 

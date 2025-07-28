@@ -1,5 +1,5 @@
+import type { InsertCheckpoint, SelectCheckpoint } from '@/db/types';
 import { NextResponse, type NextRequest } from 'next/server';
-import type { InsertCheckpoint } from '@/db/types';
 import { currentUser } from '@/lib/current-user';
 import { checkpoints } from '@/db/schema';
 import { db } from '@/db';
@@ -43,5 +43,8 @@ export async function POST(
     .values({ objective, goalId: parsedId.data } satisfies InsertCheckpoint)
     .returning();
 
-  return NextResponse.json({ checkpoint: newCheckpoint }, { status: 201 });
+  return NextResponse.json(
+    { checkpoint: newCheckpoint satisfies SelectCheckpoint },
+    { status: 201 },
+  );
 }

@@ -16,14 +16,14 @@ import { CARD_WIDTH, GoalCard } from '@/components/goals/goal-card';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useGoalStore } from '@/providers/goal-store-provider';
 import { Button } from '@/components/ui/button';
-import { User } from '@/db/types';
+import { Goal, User } from '@/types';
 import axios from 'axios';
 
 export default function GoalsPage() {
   const [user, setUser] = useState<User | null>(null);
   const [goalSheetOpen, setGoalSheetOpen] = useState(false);
 
-  const { goals, setGoals } = useGoalStore((store) => store);
+  const { goals, status, setGoals, setStatus } = useGoalStore((store) => store);
 
   // Refs for the scrollable container
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -63,7 +63,7 @@ export default function GoalsPage() {
     const currentUser = async () => {
       try {
         const response = await axios.get('/api/user');
-        setUser(response.data.user);
+        setUser(response.data.user satisfies User);
       } catch (error) {
         console.error('Failed to load user', error);
       }
@@ -75,18 +75,20 @@ export default function GoalsPage() {
   useEffect(() => {
     const fetchGoals = async () => {
       try {
+        setStatus('loading');
         const response = await axios.get('/api/goals');
-        setGoals(response.data.goals);
+        setGoals(response.data.goals satisfies Goal[]);
+        setStatus('success');
       } catch (error) {
         console.error('Failed to load user', error);
+        setStatus('failed');
       }
     };
 
-    if (user) {
-      document.title = `Momentum - ${user.displayName}`;
+    if (status !== 'loading' && status !== 'success') {
       fetchGoals();
     }
-  }, [setGoals, user]);
+  }, [setGoals, setStatus, status, user]);
 
   useEffect(() => {
     const container = scrollContainerRef.current;

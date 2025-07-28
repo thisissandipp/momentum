@@ -1,4 +1,5 @@
 import { drizzle } from 'drizzle-orm/postgres-js';
+import * as schema from '@/db/schema';
 import postgres from 'postgres';
 
 /**
@@ -18,4 +19,4 @@ if (!databaseUrl) {
 const client = globalForDb.client ?? postgres(databaseUrl);
 if (process.env.NODE_ENV !== 'production') globalForDb.client = client;
 
-export const db = drizzle({ client });
+export const db = drizzle(client, { schema });

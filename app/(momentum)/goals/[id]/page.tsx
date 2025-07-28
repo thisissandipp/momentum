@@ -82,7 +82,7 @@ export default function GoalDetailsPage() {
       }
     };
 
-    if (status !== 'success') {
+    if (status !== 'loading' && status !== 'success') {
       fetchGoals();
     }
 

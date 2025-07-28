@@ -14,15 +14,16 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { GoalForm, goalFormId } from '@/components/goals/goal-form';
 import { CARD_WIDTH, GoalCard } from '@/components/goals/goal-card';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useUserStore } from '@/providers/user-store-provider';
 import { useGoalStore } from '@/providers/goal-store-provider';
 import { Button } from '@/components/ui/button';
-import { Goal, User } from '@/types';
+import { Goal } from '@/types';
 import axios from 'axios';
 
 export default function GoalsPage() {
-  const [user, setUser] = useState<User | null>(null);
   const [goalSheetOpen, setGoalSheetOpen] = useState(false);
 
+  const { user } = useUserStore((store) => store);
   const { goals, status, setGoals, setStatus } = useGoalStore((store) => store);
 
   // Refs for the scrollable container
@@ -60,22 +61,9 @@ export default function GoalsPage() {
   );
 
   useEffect(() => {
-    const currentUser = async () => {
-      try {
-        const response = await axios.get('/api/user');
-        setUser(response.data.user satisfies User);
-      } catch (error) {
-        console.error('Failed to load user', error);
-      }
-    };
-
-    currentUser();
-  }, []);
-
-  useEffect(() => {
     const fetchGoals = async () => {
+      setStatus('loading');
       try {
-        setStatus('loading');
         const response = await axios.get('/api/goals');
         setGoals(response.data.goals satisfies Goal[]);
         setStatus('success');

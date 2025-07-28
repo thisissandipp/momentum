@@ -1,7 +1,7 @@
 import { Checkpoint, Goal } from '@/types';
 import { createStore } from 'zustand';
 
-export type Status = 'initial' | 'loading' | 'success' | 'failed';
+type Status = 'initial' | 'loading' | 'success' | 'failed';
 export type GoalState = { goals: Goal[]; status: Status };
 
 export type GoalActions = {

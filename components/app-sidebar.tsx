@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { NavigationSecondary } from '@/components/navigation-secondary';
 import { NavigationUser } from '@/components/navigation-user';
 import { NavigationMain } from '@/components/navigation-main';
 import { ZapIcon } from 'lucide-react';
@@ -36,6 +37,7 @@ export const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) =
       </SidebarHeader>
       <SidebarContent>
         <NavigationMain />
+        <NavigationSecondary className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavigationUser />
